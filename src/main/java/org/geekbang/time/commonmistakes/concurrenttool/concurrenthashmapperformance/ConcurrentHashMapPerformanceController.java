@@ -16,8 +16,6 @@ import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@RestController
-@RequestMapping("concurrenthashmapperformance")
 @Slf4j
 public class ConcurrentHashMapPerformanceController {
 
@@ -25,8 +23,12 @@ public class ConcurrentHashMapPerformanceController {
     private static int THREAD_COUNT = 10;
     private static int ITEM_COUNT = 10;
 
-    @GetMapping("good")
-    public String good() throws InterruptedException {
+
+    public static void main(String[] args) throws InterruptedException {
+        good();
+    }
+
+    public static String good() throws InterruptedException {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("normaluse");
         Map<String, Long> normaluse = normaluse();
@@ -47,7 +49,7 @@ public class ConcurrentHashMapPerformanceController {
         return "OK";
     }
 
-    private Map<String, Long> normaluse() throws InterruptedException {
+    private static Map<String, Long> normaluse() throws InterruptedException {
         ConcurrentHashMap<String, Long> freqs = new ConcurrentHashMap<>(ITEM_COUNT);
         ForkJoinPool forkJoinPool = new ForkJoinPool(THREAD_COUNT);
         forkJoinPool.execute(() -> IntStream.rangeClosed(1, LOOP_COUNT).parallel().forEach(i -> {
@@ -66,7 +68,7 @@ public class ConcurrentHashMapPerformanceController {
         return freqs;
     }
 
-    private Map<String, Long> gooduse() throws InterruptedException {
+    private static Map<String, Long> gooduse() throws InterruptedException {
         ConcurrentHashMap<String, LongAdder> freqs = new ConcurrentHashMap<>(ITEM_COUNT);
         ForkJoinPool forkJoinPool = new ForkJoinPool(THREAD_COUNT);
         forkJoinPool.execute(() -> IntStream.rangeClosed(1, LOOP_COUNT).parallel().forEach(i -> {
