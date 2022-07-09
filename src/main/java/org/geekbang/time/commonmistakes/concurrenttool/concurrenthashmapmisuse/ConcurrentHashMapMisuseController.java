@@ -14,23 +14,24 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
-@RestController
-@RequestMapping("concurrenthashmapmisuse")
 @Slf4j
 public class ConcurrentHashMapMisuseController {
 
     private static int THREAD_COUNT = 10;
     private static int ITEM_COUNT = 1000;
 
-    private ConcurrentHashMap<String, Long> getData(int count) {
+    public static void main(String[] args) throws InterruptedException {
+        wrong();
+    }
+
+    private static ConcurrentHashMap<String, Long> getData(int count) {
         return LongStream.rangeClosed(1, count)
                 .boxed()
                 .collect(Collectors.toConcurrentMap(i -> UUID.randomUUID().toString(), Function.identity(),
                         (o1, o2) -> o1, ConcurrentHashMap::new));
     }
 
-    @GetMapping("wrong")
-    public String wrong() throws InterruptedException {
+    public static String wrong() throws InterruptedException {
         ConcurrentHashMap<String, Long> concurrentHashMap = getData(ITEM_COUNT - 100);
         log.info("init size:{}", concurrentHashMap.size());
 
@@ -47,7 +48,6 @@ public class ConcurrentHashMapMisuseController {
         return "OK";
     }
 
-    @GetMapping("right")
     public String right() throws InterruptedException {
         ConcurrentHashMap<String, Long> concurrentHashMap = getData(ITEM_COUNT - 100);
         log.info("init size:{}", concurrentHashMap.size());
