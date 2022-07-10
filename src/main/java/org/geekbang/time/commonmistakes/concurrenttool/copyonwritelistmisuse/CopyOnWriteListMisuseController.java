@@ -12,13 +12,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@RestController
-@RequestMapping("copyonwritelistmisuse")
 @Slf4j
 public class CopyOnWriteListMisuseController {
 
-    @GetMapping("write")
-    public Map testWrite() {
+    public static void main(String[] args) {
+//        testWrite();
+        testRead();
+    }
+
+    public static Map testWrite() {
         List<Integer> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
         List<Integer> synchronizedList = Collections.synchronizedList(new ArrayList<>());
         StopWatch stopWatch = new StopWatch();
@@ -36,12 +38,11 @@ public class CopyOnWriteListMisuseController {
         return result;
     }
 
-    private void addAll(List<Integer> list) {
+    private static void addAll(List<Integer> list) {
         list.addAll(IntStream.rangeClosed(1, 1000000).boxed().collect(Collectors.toList()));
     }
 
-    @GetMapping("read")
-    public Map testRead() {
+    public static Map testRead() {
         List<Integer> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
         List<Integer> synchronizedList = Collections.synchronizedList(new ArrayList<>());
         addAll(copyOnWriteArrayList);

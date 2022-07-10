@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 @Slf4j
 public class ConcurrentHashMapPerformanceController {
@@ -26,6 +27,16 @@ public class ConcurrentHashMapPerformanceController {
 
     public static void main(String[] args) throws InterruptedException {
         good();
+        // Creating a LongStream
+//        LongStream stream = LongStream.of(1L, 3L, 5L, 7L, 9L);
+//
+//        // Using LongStream reduce
+//        // (long identity, LongBinaryOperator op)
+//        long answer = stream.reduce(5, (num1, num2)
+//                -> (num1 + num2));
+//
+//        // Displaying the result
+//        System.out.println(answer);
     }
 
     public static String good() throws InterruptedException {
