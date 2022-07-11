@@ -6,10 +6,15 @@ import org.junit.Assert;
 @Slf4j
 public class Interesting {
 
-    volatile int a = 1;
-    volatile int b = 1;
+    static volatile int a = 1;
+    static volatile int b = 1;
 
-    public synchronized void add() {
+    public static void main(String[] args) {
+        add();
+        compare();
+    }
+
+    public static synchronized void add() {
         log.info("add start");
         for (int i = 0; i < 1000000; i++) {
             a++;
@@ -18,7 +23,7 @@ public class Interesting {
         log.info("add done");
     }
 
-    public void compare() {
+    public static void compare() {
         log.info("compare start");
         for (int i = 0; i < 1000000; i++) {
             if (a < b) {
@@ -29,7 +34,7 @@ public class Interesting {
         log.info("compare done");
     }
 
-    public synchronized void compareRight() {
+    public static synchronized void compareRight() {
         log.info("compare start");
         for (int i = 0; i < 1000000; i++) {
             Assert.assertTrue(a == b);
