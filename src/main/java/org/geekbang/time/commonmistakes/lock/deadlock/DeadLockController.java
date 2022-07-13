@@ -28,7 +28,8 @@ public class DeadLockController {
     }
 
     public static void main(String[] args) {
-        System.out.println(new DeadLockController().wrong());
+//        System.out.println(new DeadLockController().wrong());
+        System.out.println(new DeadLockController().right());
     }
 
     private boolean createOrder(List<Item> order) {
