@@ -19,6 +19,8 @@ public class ThreadPoolOOMController {
 
     public static void main(String[] args) throws InterruptedException {
 //        new ThreadPoolOOMController().oom1();
+//        new ThreadPoolOOMController().oom2();
+        new ThreadPoolOOMController().right();
     }
 
     private void printStats(ThreadPoolExecutor threadPool) {
