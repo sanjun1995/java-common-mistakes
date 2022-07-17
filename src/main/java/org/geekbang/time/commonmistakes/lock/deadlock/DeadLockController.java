@@ -18,9 +18,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
-@RestController
-@RequestMapping("deadlock")
 @Slf4j
 public class DeadLockController {
 
@@ -28,6 +25,11 @@ public class DeadLockController {
 
     public DeadLockController() {
         IntStream.range(0, 10).forEach(i -> items.put("item" + i, new Item("item" + i)));
+    }
+
+    public static void main(String[] args) {
+//        System.out.println(new DeadLockController().wrong());
+//        System.out.println(new DeadLockController().right());
     }
 
     private boolean createOrder(List<Item> order) {
@@ -58,7 +60,6 @@ public class DeadLockController {
                 .map(name -> items.get(name)).collect(Collectors.toList());
     }
 
-    @GetMapping("wrong")
     public long wrong() {
         long begin = System.currentTimeMillis();
         long success = IntStream.rangeClosed(1, 100).parallel()
@@ -75,7 +76,6 @@ public class DeadLockController {
         return success;
     }
 
-    @GetMapping("right")
     public long right() {
         long begin = System.currentTimeMillis();
         long success = IntStream.rangeClosed(1, 100).parallel()

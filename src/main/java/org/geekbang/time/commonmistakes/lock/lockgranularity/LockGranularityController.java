@@ -10,35 +10,31 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-@RestController
-@RequestMapping("lockgranularity")
 @Slf4j
 public class LockGranularityController {
 
-    private List<Integer> data = new ArrayList<>();
+    private static List<Integer> data = new ArrayList<>();
 
-    private void slow() {
+    private static void slow() {
         try {
             TimeUnit.MILLISECONDS.sleep(10);
         } catch (InterruptedException e) {
         }
     }
 
-    @GetMapping("wrong")
-    public int wrong() {
+    public static int wrong() {
         long begin = System.currentTimeMillis();
         IntStream.rangeClosed(1, 1000).parallel().forEach(i -> {
-            synchronized (this) {
+            synchronized (data) {
                 slow();
                 data.add(i);
             }
         });
-        log.info("took:{}", System.currentTimeMillis() - begin);
+        log.info("wrong took:{}", System.currentTimeMillis() - begin);
         return data.size();
     }
 
-    @GetMapping("right")
-    public int right() {
+    public static int right() {
         long begin = System.currentTimeMillis();
         IntStream.rangeClosed(1, 1000).parallel().forEach(i -> {
             slow();
@@ -46,8 +42,12 @@ public class LockGranularityController {
                 data.add(i);
             }
         });
-        log.info("took:{}", System.currentTimeMillis() - begin);
+        log.info("right took:{}", System.currentTimeMillis() - begin);
         return data.size();
     }
 
+    public static void main(String[] args) {
+        wrong();
+        right();
+    }
 }
