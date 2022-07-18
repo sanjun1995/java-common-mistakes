@@ -19,13 +19,18 @@ public class JedisMisreuseController {
     private static JedisPool jedisPool = new JedisPool("127.0.0.1", 6379);
 
     static {
-        try (Jedis jedis = new Jedis("127.0.0.1", 6379)) {
-            Assert.isTrue("OK".equals(jedis.set("a", "1")), "set a = 1 return OK");
-            Assert.isTrue("OK".equals(jedis.set("b", "2")), "set b = 2 return OK");
-        }
+//        try (Jedis jedis = new Jedis("127.0.0.1", 6379)) {
+//            Assert.isTrue("OK".equals(jedis.set("a", "1")), "set a = 1 return OK");
+//            Assert.isTrue("OK".equals(jedis.set("b", "2")), "set b = 2 return OK");
+//        }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             jedisPool.close();
         }));
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+//        new JedisMisreuseController().wrong();
+        new JedisMisreuseController().right();
     }
 
     public void wrong() throws InterruptedException {
