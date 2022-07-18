@@ -17,6 +17,12 @@ import java.util.stream.IntStream;
 @Slf4j
 public class ThreadPoolOOMController {
 
+    public static void main(String[] args) throws InterruptedException {
+//        new ThreadPoolOOMController().oom1();
+//        new ThreadPoolOOMController().oom2();
+        new ThreadPoolOOMController().right();
+    }
+
     private void printStats(ThreadPoolExecutor threadPool) {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             log.info("=========================");
@@ -29,7 +35,6 @@ public class ThreadPoolOOMController {
         }, 0, 1, TimeUnit.SECONDS);
     }
 
-    @GetMapping("oom1")
     public void oom1() throws InterruptedException {
 
         ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
@@ -51,7 +56,6 @@ public class ThreadPoolOOMController {
         threadPool.awaitTermination(1, TimeUnit.HOURS);
     }
 
-    @GetMapping("oom2")
     public void oom2() throws InterruptedException {
 
         ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
@@ -70,7 +74,6 @@ public class ThreadPoolOOMController {
         threadPool.awaitTermination(1, TimeUnit.HOURS);
     }
 
-    @GetMapping("right")
     public int right() throws InterruptedException {
         AtomicInteger atomicInteger = new AtomicInteger();
         ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
@@ -107,7 +110,6 @@ public class ThreadPoolOOMController {
         return atomicInteger.intValue();
     }
 
-    @GetMapping("better")
     public int better() throws InterruptedException {
         //这里开始是激进线程池的实现
         BlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>(10) {

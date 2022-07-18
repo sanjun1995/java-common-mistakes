@@ -20,8 +20,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 
-@RestController
-@RequestMapping("threadpoolmixuse")
 @Slf4j
 public class ThreadPoolMixuseController {
 
@@ -58,12 +56,14 @@ public class ThreadPoolMixuseController {
         };
     }
 
-    @GetMapping("wrong")
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        new ThreadPoolMixuseController().wrong();
+    }
+
     public int wrong() throws ExecutionException, InterruptedException {
         return threadPool.submit(calcTask()).get();
     }
 
-    @GetMapping("right")
     public int right() throws ExecutionException, InterruptedException {
         return asyncCalcThreadPool.submit(calcTask()).get();
     }
