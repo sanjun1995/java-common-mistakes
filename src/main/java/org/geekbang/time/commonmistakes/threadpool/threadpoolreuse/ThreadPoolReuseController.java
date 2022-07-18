@@ -14,14 +14,21 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@RestController
-@RequestMapping("threadpoolreuse")
 @Slf4j
 public class ThreadPoolReuseController {
 
-    @GetMapping("wrong")
+    public static void main(String[] args) throws InterruptedException {
+        IntStream.rangeClosed(1, 1000).forEach(i -> {
+            try {
+                new ThreadPoolReuseController().wrong();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public String wrong() throws InterruptedException {
-        ThreadPoolExecutor threadPool = ThreadPoolHelper.getThreadPool();
+        ThreadPoolExecutor threadPool = ThreadPoolHelper.getRightThreadPool();
         IntStream.rangeClosed(1, 10).forEach(i -> {
             threadPool.execute(() -> {
                 String payload = IntStream.rangeClosed(1, 1000000)

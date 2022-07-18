@@ -23,12 +23,12 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 @Slf4j
 public class ThreadPoolMixuseController {
 
-    private static ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
-            2, 2,
-            1, TimeUnit.HOURS,
-            new ArrayBlockingQueue<>(100),
-            new ThreadFactoryBuilder().setNameFormat("batchfileprocess-threadpool-%d").get(),
-            new ThreadPoolExecutor.CallerRunsPolicy());
+//    private static ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
+//            2, 2,
+//            1, TimeUnit.HOURS,
+//            new ArrayBlockingQueue<>(100),
+//            new ThreadFactoryBuilder().setNameFormat("batchfileprocess-threadpool-%d").get(),
+//            new ThreadPoolExecutor.CallerRunsPolicy());
 
 
     private static ThreadPoolExecutor asyncCalcThreadPool = new ThreadPoolExecutor(
@@ -37,7 +37,7 @@ public class ThreadPoolMixuseController {
             new ArrayBlockingQueue<>(1000),
             new ThreadFactoryBuilder().setNameFormat("asynccalc-threadpool-%d").get());
 
-    private void printStats(ThreadPoolExecutor threadPool) {
+    private static void printStats(ThreadPoolExecutor threadPool) {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             log.info("=========================");
             log.info("Pool Size: {}", threadPool.getPoolSize());
@@ -57,27 +57,27 @@ public class ThreadPoolMixuseController {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        new ThreadPoolMixuseController().wrong();
+//        new ThreadPoolMixuseController().wrong();
+        new ThreadPoolMixuseController().right();
     }
 
-    public int wrong() throws ExecutionException, InterruptedException {
-        return threadPool.submit(calcTask()).get();
-    }
+//    public int wrong() throws ExecutionException, InterruptedException {
+//        return threadPool.submit(calcTask()).get();
+//    }
 
     public int right() throws ExecutionException, InterruptedException {
         return asyncCalcThreadPool.submit(calcTask()).get();
     }
 
-    @PostConstruct
-    public void init() {
-        printStats(threadPool);
+    static  {
+//        printStats(threadPool);
 
         new Thread(() -> {
             String payload = IntStream.rangeClosed(1, 1_000_000)
                     .mapToObj(__ -> "a")
                     .collect(Collectors.joining(""));
             while (true) {
-                threadPool.execute(() -> {
+                asyncCalcThreadPool.execute(() -> {
                     try {
                         Files.write(Paths.get("demo.txt"), Collections.singletonList(LocalTime.now().toString() + ":" + payload), UTF_8, CREATE, TRUNCATE_EXISTING);
                     } catch (IOException e) {
