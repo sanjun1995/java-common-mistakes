@@ -13,15 +13,12 @@ import redis.clients.jedis.JedisPoolConfig;
 import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 
-@RestController
-@RequestMapping("jedismisreuse")
 @Slf4j
 public class JedisMisreuseController {
 
     private static JedisPool jedisPool = new JedisPool("127.0.0.1", 6379);
 
-    @PostConstruct
-    public void init() {
+    static {
         try (Jedis jedis = new Jedis("127.0.0.1", 6379)) {
             Assert.isTrue("OK".equals(jedis.set("a", "1")), "set a = 1 return OK");
             Assert.isTrue("OK".equals(jedis.set("b", "2")), "set b = 2 return OK");
@@ -31,7 +28,6 @@ public class JedisMisreuseController {
         }));
     }
 
-    @GetMapping("/wrong")
     public void wrong() throws InterruptedException {
         Jedis jedis = new Jedis("127.0.0.1", 6379);
         new Thread(() -> {
@@ -55,7 +51,6 @@ public class JedisMisreuseController {
         TimeUnit.SECONDS.sleep(5);
     }
 
-    @GetMapping("/right")
     public void right() throws InterruptedException {
 
         new Thread(() -> {
